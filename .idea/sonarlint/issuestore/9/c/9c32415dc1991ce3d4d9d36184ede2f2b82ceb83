@@ -1,0 +1,21 @@
+
+d
+java:S1192:"GDefine a constant instead of duplicating this literal " owes " 5 times.(æÿæÈ8÷óÕ•Š2
+c
+java:S1192:"FDefine a constant instead of duplicating this literal "User " 5 times.(æÿæÈ8÷óÕ•Š2
+d
+java:S1192:"GDefine a constant instead of duplicating this literal " User " 5 times.(æÿæÈ8÷óÕ•Š2
+F	java:S1065"+Replace this use of System.out by a logger.(´¡‰08¢õÕ•Š2
+N
+java:S16027",Remove useless curly braces around statement(İı¹åùÿÿÿÿ8¢õÕ•Š2
+G	java:S106:"+Replace this use of System.out by a logger.(æÿæÈ8¢õÕ•Š2
+F	java:S106C"+Replace this use of System.out by a logger.(­øÈY8¢õÕ•Š2
+L	java:S106E"+Replace this use of System.out by a logger.(Âï—Êÿÿÿÿÿ8£õÕ•Š2
+L	java:S106K"+Replace this use of System.out by a logger.(¾ÖÀ ÿÿÿÿÿ8£õÕ•Š2
+N
+java:S1602L",Remove useless curly braces around statement(Õé•˜úÿÿÿÿ8£õÕ•Š2
+F	java:S106R"+Replace this use of System.out by a logger.(­øÈY8–ª–Š2
+G	java:S106T"+Replace this use of System.out by a logger.(Áªóá8Šşª–Š2
+o
+java:S3776`"RRefactor this method to reduce its Cognitive Complexity from 32 to the 15 allowed.(Çµí‘8£õÕ•Š2
+L	java:S106f"+Replace this use of System.err by a logger.(ãŸçèùÿÿÿÿ8¤õÕ•Š2
