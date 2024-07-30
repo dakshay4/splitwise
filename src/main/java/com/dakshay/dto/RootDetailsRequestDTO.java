@@ -13,5 +13,5 @@ public class RootDetailsRequestDTO {
     private String userId;
     private BigDecimal amount;
     private SplitType splitType;
-    private List<ChildDetailRequestDTO> childDetailRequests;
+    private List<Split> childDetailRequests;
 }

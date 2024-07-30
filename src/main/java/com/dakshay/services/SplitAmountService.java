@@ -1,6 +1,13 @@
 package com.dakshay.services;
 
-import com.dakshay.dto.ChildDetailRequestDTO;
+import com.dakshay.EqualSplit;
+import com.dakshay.dto.EqualExpense;
+import com.dakshay.dto.ExactExpense;
+import com.dakshay.dto.ExactSplit;
+import com.dakshay.dto.Expense;
+import com.dakshay.dto.PercentSplit;
+import com.dakshay.dto.PercentageExpense;
+import com.dakshay.dto.Split;
 import com.dakshay.dto.RootDetailsRequestDTO;
 import com.dakshay.enums.SplitType;
 import com.dakshay.utils.NumberUtils;
@@ -14,34 +21,38 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+
+import static com.dakshay.enums.SplitType.EXACT;
 
 public class SplitAmountService {
 
 
     private Map<String, Map<String, BigDecimal>> owingDetails = new ConcurrentHashMap<>();
 
-    public void splitAmount(RootDetailsRequestDTO rootDetailsRequestDTO) {
-        String paidUser = rootDetailsRequestDTO.getUserId();
-        BigDecimal paidAmount = rootDetailsRequestDTO.getAmount();
-        var splitType = rootDetailsRequestDTO.getSplitType();
-        int totalUsers = rootDetailsRequestDTO.getChildDetailRequests().size();
+    public void splitAmount(Expense expense) {
+        if(!expense.validate()) throw new RuntimeException("Expense and split mismatch");
+        String paidUser = expense.getPaidByUser();
+        BigDecimal paidAmount = expense.getAmount();
+        var splitType = expense.getSplitType();
+        int totalUsers = expense.getSplits().size();
         Map<String, BigDecimal> owePerUser = owingDetails.get(paidUser) != null ? owingDetails.get(paidUser) : new HashMap<>();
-        for (ChildDetailRequestDTO childDetailRequest : rootDetailsRequestDTO.getChildDetailRequests()) {
-            String owesUserId = childDetailRequest.getUserId();
+        for (Split split : expense.getSplits()) {
+            String owesUserId = split.getUserId();
             if(paidUser.equals(owesUserId)) continue;
             BigDecimal newOwe = BigDecimal.ZERO;
             switch (splitType) {
                 case EQUAL ->
                     newOwe = NumberUtils.divideByInt(paidAmount, totalUsers).add(
-                            owePerUser.getOrDefault(childDetailRequest.getUserId(), BigDecimal.ZERO)
+                            owePerUser.getOrDefault(split.getUserId(), BigDecimal.ZERO)
                     );
 
                 case EXACT ->
-                    newOwe = childDetailRequest.getAmount().add( owePerUser.getOrDefault(childDetailRequest.getUserId(), BigDecimal.ZERO));
+                    newOwe = split.getAmount().add( owePerUser.getOrDefault(split.getUserId(), BigDecimal.ZERO));
 
                 case PERCENT ->
-                    newOwe = NumberUtils.percentage(paidAmount, childDetailRequest.getPercentage()).add(
-                            owePerUser.getOrDefault(childDetailRequest.getUserId(), BigDecimal.ZERO)
+                    newOwe = NumberUtils.percentage(paidAmount, split.getPercent()).add(
+                            owePerUser.getOrDefault(split.getUserId(), BigDecimal.ZERO)
                     );
             }
             owePerUser.put(owesUserId, newOwe);
@@ -106,44 +117,48 @@ public class SplitAmountService {
         // Wrap the InputStream with a BufferedReader
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             String line;
-            RootDetailsRequestDTO rootDetailsRequestDTO = new RootDetailsRequestDTO();
+            Expense expense = null;
             while ((line = reader.readLine()) != null) {
                 int k=0;
                 String[] elements = line.split(" ");
                 String type = elements[k++];
-                List<ChildDetailRequestDTO> childDetailRequestDTOs = new ArrayList<>();
                 if("EXPENSE".equals(type)) {
-                    String mainUser = elements[k++];
-                    String amt = elements[k++];
+                    String paidByUser = elements[k++];
+                    BigDecimal amt = new BigDecimal(elements[k++]);
                     int totalUser = Integer.parseInt(elements[k++]);
-                    rootDetailsRequestDTO.setUserId(mainUser);
-                    rootDetailsRequestDTO.setAmount(new BigDecimal(amt));
+                    List<String> toSplitInusers = new ArrayList<>();
                     for(int i = 0 ; i<totalUser; i++) {
                         String userName = elements[k++];
-                        ChildDetailRequestDTO childDetailRequestDTO = new ChildDetailRequestDTO();
-                        childDetailRequestDTO.setUserId(userName);
-                        childDetailRequestDTOs.add(childDetailRequestDTO);
+                        toSplitInusers.add(userName);
                     }
                     String splitType = elements[k++];
-                    if(SplitType.EQUAL.name().equals(splitType)) rootDetailsRequestDTO.setSplitType(SplitType.EQUAL);
+                    if(SplitType.EQUAL.name().equals(splitType)) {
+                        List<Split> equalSplits = toSplitInusers.stream()
+                                .map(user ->  new EqualSplit(user,NumberUtils.divideByInt(amt, toSplitInusers.size())))
+                                .collect(Collectors.toList());
+                        expense = new EqualExpense(paidByUser, amt, equalSplits);
+
+                    }
                     if(SplitType.PERCENT.name().equals(splitType)) {
-                        rootDetailsRequestDTO.setSplitType(SplitType.PERCENT);
-                        for(int i = 0 ; i<totalUser; i++) {
+                        List<Split> percentSplits = new ArrayList<>();
+                        for (int i=0; i<toSplitInusers.size();i++) {
                             int percent = Integer.parseInt(elements[k++]);
-                            ChildDetailRequestDTO childDetailRequestDTO = childDetailRequestDTOs.get(i);
-                            childDetailRequestDTO.setPercentage(percent);
+                            PercentSplit percentSplit = new PercentSplit(paidByUser, percent);
+                            percentSplits.add(percentSplit);
                         }
+                        expense = new PercentageExpense(paidByUser,amt, percentSplits);
                     }
-                    if(SplitType.EXACT.name().equals(splitType)) {
-                        rootDetailsRequestDTO.setSplitType(SplitType.EXACT);
-                        for(int i = 0 ; i<totalUser; i++) {
+                    if(EXACT.name().equals(splitType)) {
+                        List<Split> percentSplits = new ArrayList<>();
+                        for (int i=0; i<toSplitInusers.size();i++) {
                             BigDecimal exactAmount = new BigDecimal(elements[k++]);
-                            ChildDetailRequestDTO childDetailRequestDTO = childDetailRequestDTOs.get(i);
-                            childDetailRequestDTO.setAmount(exactAmount);
+                            Split percentSplit = new ExactSplit(paidByUser, exactAmount);
+                            percentSplits.add(percentSplit);
                         }
+                        expense = new ExactExpense(paidByUser,amt, percentSplits);
                     }
-                    rootDetailsRequestDTO.setChildDetailRequests(childDetailRequestDTOs);
-                    splitAmountService.splitAmount(rootDetailsRequestDTO);
+                    assert expense != null;
+                    splitAmountService.splitAmount(expense);
                 } else {
                     if(elements.length == 1) splitAmountService.show();
                     if(elements.length == 2) splitAmountService.show(elements[1]);

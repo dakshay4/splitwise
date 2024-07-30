@@ -1,21 +1,23 @@
 
+b	java:S112""FDefine and throw a dedicated exception instead of using a generic one.(íÒ¹«8»­Î‹‹2
 d
-java:S1192:"GDefine a constant instead of duplicating this literal " owes " 5 times.(æÿæÈ8÷óÕ•Š2
+java:S1192E"GDefine a constant instead of duplicating this literal " owes " 5 times.(æÿæÈ8½­Î‹‹2
 c
-java:S1192:"FDefine a constant instead of duplicating this literal "User " 5 times.(æÿæÈ8÷óÕ•Š2
+java:S1192E"FDefine a constant instead of duplicating this literal "User " 5 times.(æÿæÈ8¾­Î‹‹2
 d
-java:S1192:"GDefine a constant instead of duplicating this literal " User " 5 times.(æÿæÈ8÷óÕ•Š2
-F	java:S1065"+Replace this use of System.out by a logger.(´¡‰08¢õÕ•Š2
+java:S1192E"GDefine a constant instead of duplicating this literal " User " 5 times.(æÿæÈ8¾­Î‹‹2
+>	java:S131,""Add a default case to this switch.(à©»é8Õ­Î‹‹2
+F	java:S106@"+Replace this use of System.out by a logger.(´¡‰08×­Î‹‹2
 N
-java:S16027",Remove useless curly braces around statement(İı¹åùÿÿÿÿ8¢õÕ•Š2
-G	java:S106:"+Replace this use of System.out by a logger.(æÿæÈ8¢õÕ•Š2
-F	java:S106C"+Replace this use of System.out by a logger.(­øÈY8¢õÕ•Š2
-L	java:S106E"+Replace this use of System.out by a logger.(Âï—Êÿÿÿÿÿ8£õÕ•Š2
-L	java:S106K"+Replace this use of System.out by a logger.(¾ÖÀ ÿÿÿÿÿ8£õÕ•Š2
+java:S1602B",Remove useless curly braces around statement(İı¹åùÿÿÿÿ8Ø­Î‹‹2
+G	java:S106E"+Replace this use of System.out by a logger.(æÿæÈ8Ø­Î‹‹2
+F	java:S106N"+Replace this use of System.out by a logger.(­øÈY8Ù­Î‹‹2
+L	java:S106P"+Replace this use of System.out by a logger.(Âï—Êÿÿÿÿÿ8Ú­Î‹‹2
+L	java:S106V"+Replace this use of System.out by a logger.(¾ÖÀ ÿÿÿÿÿ8Ú­Î‹‹2
 N
-java:S1602L",Remove useless curly braces around statement(Õé•˜úÿÿÿÿ8£õÕ•Š2
-F	java:S106R"+Replace this use of System.out by a logger.(­øÈY8–ª–Š2
-G	java:S106T"+Replace this use of System.out by a logger.(Áªóá8Šşª–Š2
+java:S1602W",Remove useless curly braces around statement(Õé•˜úÿÿÿÿ8Û­Î‹‹2
+F	java:S106]"+Replace this use of System.out by a logger.(­øÈY8Ü­Î‹‹2
+G	java:S106_"+Replace this use of System.out by a logger.(Áªóá8Ü­Î‹‹2
 o
-java:S3776`"RRefactor this method to reduce its Cognitive Complexity from 32 to the 15 allowed.(Çµí‘8£õÕ•Š2
-L	java:S106f"+Replace this use of System.err by a logger.(ãŸçèùÿÿÿÿ8¤õÕ•Š2
+java:S3776k"RRefactor this method to reduce its Cognitive Complexity from 32 to the 15 allowed.(Çµí‘8ß­Î‹‹2
+L	java:S106q"+Replace this use of System.err by a logger.(ãŸçèùÿÿÿÿ8à­Î‹‹2
